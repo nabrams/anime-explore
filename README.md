@@ -8,6 +8,30 @@
 
 ---
 
+
+
+
+__ ANIME.JS CHEAT SHEET __
+
+### List of available subpaths
+
+```
+import { animate } from 'animejs/animation';
+import { createTimer } from 'animejs/timer';
+import { createTimeline } from 'animejs/timeline';
+import { createAnimatable } from 'animejs/animatable';
+import { createDraggable } from 'animejs/draggable';
+import { createLayout } from 'animejs/layout';
+import { createScope } from 'animejs/scope';
+import { engine } from 'animejs/engine';
+import * as events from 'animejs/events';
+import * as easings from 'animejs/easings';
+import * as utils from 'animejs/utils';
+import * as svg from 'animejs/svg';
+import * as text from 'animejs/text';
+import * as waapi from 'animejs/waapi';
+```
+
 ## Project Structure
 
 This project is using Qwik with [QwikCity](https://qwik.dev/qwikcity/overview/). QwikCity is just an extra set of tools on top of Qwik to make it easier to build a full site, including directory-based routing, layouts, and more.

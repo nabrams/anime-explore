@@ -1,10 +1,11 @@
 import { component$, useVisibleTask$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import { Link } from "@builder.io/qwik-city";
 import { animate, stagger, splitText } from 'https://esm.sh/animejs';
 
 export default component$(() => {
   const boxRef = useSignal<HTMLDivElement>();
-  const buttonRef = useSignal<HTMLButtonElement>();
+  const buttonRef = useSignal<HTMLAnchorElement>();
 
   useVisibleTask$(() => {
     if (boxRef.value) {
@@ -48,9 +49,12 @@ export default component$(() => {
 <div ref={boxRef} style="width: 400px; height: 400px; display: flex; align-items: center; justify-content: center;">
   <img src="/src/images/hui.png" alt="Hui" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
 </div>
-<button 
-  ref={buttonRef} 
-  onClick$={() => window.location.href = '/home'}
+<h1 style="color: white; font-size: 2.5rem; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+  Build with Hui today.
+</h1>
+<Link 
+  href="/home/"
+  ref={buttonRef}
   style="
     padding: 1.5rem 3rem;
     font-size: 1.75rem;
@@ -63,6 +67,8 @@ export default component$(() => {
     box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
     transition: all 0.3s ease;
     transform: scale(1);
+    text-decoration: none;
+    display: inline-block;
   "
   onMouseEnter$={(e) => {
     (e.target as HTMLElement).style.transform = 'scale(1.1)';
@@ -74,7 +80,7 @@ export default component$(() => {
   }}
 >
   Get Started
-</button>
+</Link>
 </div>
   );
 });
