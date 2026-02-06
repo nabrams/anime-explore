@@ -1,6 +1,6 @@
 import { component$, useVisibleTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { animate, stagger } from 'animejs';
+import { animate, stagger, utils } from 'animejs';
 
 // Custom SVG icons matching the Hui logo style (thick navy strokes)
 const InteriorDesignIcon = () => (
@@ -51,14 +51,36 @@ const ArchitectureIcon = () => (
 );
 
 const AudioAVIcon = () => (
-  <svg id="audio-svg" width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Speaker icon */}
-    <rect id="speaker-body" x="12" y="8" width="24" height="48" rx="4" fill="#1e3a5f" />
-    <circle id="speaker-cone" cx="24" cy="40" r="10" fill="white" />
-    <circle id="speaker-tweeter" cx="24" cy="20" r="5" fill="white" />
-    <path id="sound-wave-1" d="M44 24C48 28 48 36 44 40" stroke="#1e3a5f" stroke-width="5" stroke-linecap="round" opacity="1" />
-    <path id="sound-wave-2" d="M50 18C58 26 58 38 50 46" stroke="#1e3a5f" stroke-width="5" stroke-linecap="round" opacity="1" />
-  </svg>
+  <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 1rem;">
+    <svg id="audio-svg" width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px);">
+      {/* Speaker icon */}
+      <rect id="speaker-body" x="12" y="8" width="24" height="48" rx="4" fill="#1e3a5f" />
+      <circle id="speaker-cone" cx="23" cy="38" r="8" fill="white" />
+      <circle id="speaker-tweeter" cx="24" cy="20" r="5" fill="white" />
+      <path id="sound-wave-1" d="M44 24C48 28 48 36 44 40" stroke="#1e3a5f" stroke-width="5" stroke-linecap="round" opacity="0.3" />
+      <path id="sound-wave-2" d="M50 18C58 26 58 38 50 46" stroke="#1e3a5f" stroke-width="5" stroke-linecap="round" opacity="0.3" />
+    </svg>
+    <button 
+      class="audio-play-btn"
+      style="
+        background: linear-gradient(135deg, #667eea 0%, #7489cd 100%);
+        border: none;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        transition: all 0.2s ease;
+      "
+    >
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+        <path d="M4 2L14 8L4 14V2Z" fill="white" />
+      </svg>
+    </button>
+  </div>
 );
 
 const LandscapingIcon = () => (
@@ -143,31 +165,47 @@ export default component$(() => {
       loop: true,
     });
 
-    // Audio/AV - Sound waves pulsing
-    animate('#sound-wave-1', {
+    // Audio/AV - Sound waves pulsing (controlled by button)
+    const [$playButton] = utils.$('.audio-play-btn');
+
+    const soundWave1Animation = animate('#sound-wave-1', {
       opacity: [0.3, 1, 0.3],
       scale: [0.9, 1.1, 0.9],
       duration: 800,
       easing: 'easeInOutSine',
-      loop: true,
+      loop: 5,
+      autoplay: false,
     });
 
-    animate('#sound-wave-2', {
+    const soundWave2Animation = animate('#sound-wave-2', {
       opacity: [0.3, 1, 0.3],
       scale: [0.9, 1.1, 0.9],
       duration: 800,
       delay: 200,
       easing: 'easeInOutSine',
-      loop: true,
+      loop: 5,
+      autoplay: false,
     });
 
     // Audio/AV - Speaker cone vibration
-    animate('#speaker-center', {
-      scale: [1, 1.2, 1],
-      duration: 150,
+    const speakerVibration = animate('#speaker-cone', {
+      scale: [1, 1.08, 1],
+      duration: 800,
       easing: 'easeInOutSine',
-      loop: true,
+      loop: 5,
+      autoplay: false,
+      transformOrigin: 'center center',
     });
+
+    const playAnimation = () => {
+      soundWave1Animation.restart();
+      soundWave2Animation.restart();
+      speakerVibration.restart();
+    };
+
+    if ($playButton) {
+      $playButton.addEventListener('click', playAnimation);
+    }
 
     // Landscaping - Tree swaying
     animate('#tree-leaves', {
