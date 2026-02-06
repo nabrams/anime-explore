@@ -2,6 +2,16 @@ import { component$, useVisibleTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { animate, stagger, utils } from 'animejs';
 
+// Route mapping for each service
+const serviceRoutes: Record<string, string> = {
+  "Interior Design": "/interior-design/",
+  "HVAC": "/hvac/",
+  "Plumbing": "/plumbing/",
+  "Architecture": "/architecture/",
+  "Audio/AV": "/audio-av/",
+  "Landscaping": "/landscaping/",
+};
+
 // Custom SVG icons matching the Hui logo style (thick navy strokes)
 const InteriorDesignIcon = () => (
   <svg id="interior-svg" width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,7 +207,9 @@ export default component$(() => {
       transformOrigin: 'center center',
     });
 
-    const playAnimation = () => {
+    const playAnimation = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
       soundWave1Animation.restart();
       soundWave2Animation.restart();
       speakerVibration.restart();
@@ -227,10 +239,13 @@ export default component$(() => {
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 1rem;">
         {services.map((serviceName) => {
           const IconComponent = iconComponents[serviceName];
+          const route = serviceRoutes[serviceName];
           return (
-            <div
+            <a
               key={serviceName}
+              href={route}
               style="
+                text-decoration: none;
                 background: white;
                 border-radius: 16px;
                 padding: 2rem;
@@ -244,14 +259,18 @@ export default component$(() => {
                 transition: all 0.3s ease;
               "
               onMouseEnter$={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-8px)';
-                target.style.boxShadow = '0 20px 40px rgba(102, 126, 234, 0.3)';
+                const target = e.currentTarget as HTMLElement | null;
+                if (target) {
+                  target.style.transform = 'translateY(-8px)';
+                  target.style.boxShadow = '0 20px 40px rgba(102, 126, 234, 0.3)';
+                }
               }}
               onMouseLeave$={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0)';
-                target.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                const target = e.currentTarget as HTMLElement | null;
+                if (target) {
+                  target.style.transform = 'translateY(0)';
+                  target.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                }
               }}
             >
               <div style="margin-bottom: 1rem;">
@@ -260,7 +279,7 @@ export default component$(() => {
               <h2 style="color: #333; font-size: 1.25rem; font-weight: 600; text-align: center; margin: 0;">
                 {serviceName}
               </h2>
-            </div>
+            </a>
           );
         })}
       </div>

@@ -71,12 +71,18 @@ export default component$(() => {
     display: inline-block;
   "
   onMouseEnter$={(e) => {
-    (e.target as HTMLElement).style.transform = 'scale(1.1)';
-    (e.target as HTMLElement).style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6)';
+    const target = e.target as HTMLElement | null;
+    if (target) {
+      target.style.transform = 'scale(1.1)';
+      target.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6)';
+    }
   }}
   onMouseLeave$={(e) => {
-    (e.target as HTMLElement).style.transform = 'scale(1)';
-    (e.target as HTMLElement).style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.4)';
+    const target = e.target as HTMLElement | null;
+    if (target) {
+      target.style.transform = 'scale(1)';
+      target.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.4)';
+    }
   }}
 >
   Get Started
